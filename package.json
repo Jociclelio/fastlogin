@@ -1,0 +1,30 @@
+{
+    "name": "fastlogin",
+    "version": "1.0.4",
+    "description": "Trocar de conta Steam",
+    "main": "main.js",
+    "scripts": {
+        "test": "electron ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Jociclelio/fastlogin.git"
+    },
+    "keywords": [
+        "steam, Steamgard, login"
+    ],
+    "author": "Jociclelio",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Jociclelio/fastlogin/issues"
+    },
+    "homepage": "https://github.com/Jociclelio/fastlogin#readme",
+    "devDependencies": {
+        "electron": "^11.2.3"
+    },
+    "dependencies": {
+        "auto-launch": "^5.0.5",
+        "bootstrap": "^4.6.0",
+        "jquery": "^3.5.1"
+    }
+}

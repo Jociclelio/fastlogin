@@ -1,0 +1,27 @@
+.bg-darker {
+    background-color: #2a3036;
+}
+
+body {
+    overflow: hidden;
+}
+
+.player {
+    cursor: pointer;
+    border-radius: 0;
+    width: 128px;
+    height: 180px;
+    margin-bottom: 4px;
+    box-sizing: unset;
+}
+
+.state {
+    text-shadow: 1px 1px 2px black;
+}
+
+.name {
+    margin-bottom: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+}

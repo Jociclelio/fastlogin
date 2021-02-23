@@ -3,7 +3,7 @@ const AutoLaunch = require('auto-launch');
 const fl = require('./fastlogin');
 const data = require('./data.js');
 const tp = require('./template');
-
+if (require('electron-squirrel-startup')) return app.quit();
 let autoLaunch = new AutoLaunch({
     name: 'FastLogin',
     path: app.getPath('exe'),
@@ -18,7 +18,8 @@ let tray = null;
 
 app.whenReady().then(() => {
     data.getUsers();
-    tray = new Tray("src/img/FastLogin.ico");
+    createWindow();
+    tray = new Tray(__dirname + "/src/img/appicon/FastLogin.ico");
     tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
     tray.on('click', () => {
         if (win != null) {
@@ -28,11 +29,6 @@ app.whenReady().then(() => {
         }
     });
 });
-
-function atualizar() {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
-    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
-}
 
 function createWindow() {
     data.getUsers();
@@ -50,7 +46,7 @@ function createWindow() {
             transparent: true,
             width: largura,
             height: altura,
-            icon: 'src/img/FastLogin.ico',
+            icon: './src/img/appicon/FastLogin.ico',
             show: false,
             title: `FastLogin - v${app.getVersion()}`,
             webPreferences: {
@@ -78,7 +74,7 @@ function createSobre() {
         resizable: false,
         width: 550,
         height: 450,
-        icon: 'src/img/FastLogin.ico',
+        icon: 'src/img/appicon/FastLogin.ico',
         show: false,
         title: `Sobre`,
         webPreferences: {
@@ -126,12 +122,12 @@ ipcMain.on('delete-user', (event, user) => {
 });
 ipcMain.on('deleted-user', (event, user) => {
     win.send('deleted-user', user);
-    atualizar();
+    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
+    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
 })
 ipcMain.on('atualizado', () => {
-    setTimeout(() => {
-        atualizar();
-    }, 1000);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
+    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
 });
 ipcMain.on('recarregar-img', (userid, url) => {
     if (win != null) {

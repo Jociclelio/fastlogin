@@ -4,7 +4,10 @@
     "description": "Trocar de conta Steam",
     "main": "main.js",
     "scripts": {
-        "test": "electron ."
+        "test": "electron .",
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make"
     },
     "repository": {
         "type": "git",
@@ -13,18 +16,56 @@
     "keywords": [
         "steam, Steamgard, login"
     ],
-    "author": "Jociclelio",
+    "author": "Jociclelio Junior",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/Jociclelio/fastlogin/issues"
     },
     "homepage": "https://github.com/Jociclelio/fastlogin#readme",
     "devDependencies": {
-        "electron": "^11.2.3"
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "electron": "^11.3.0"
     },
     "dependencies": {
         "auto-launch": "^5.0.5",
         "bootstrap": "^4.6.0",
+        "electron-squirrel-startup": "^1.0.0",
         "jquery": "^3.5.1"
+    },
+    "config": {
+        "forge": {
+            "packagerConfig": {
+                "name": "FastLogin",
+                "icon": "./src/img/appicon/FastLogin.ico",
+                "overwrite": true
+            },
+            "makers": [{
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "name": "FastLogin",
+                        "setupIcon": "./src/img/appicon/FastLogin.ico",
+                        "loadingGif": "./src/img/loading/loading.gif"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip",
+                    "platforms": [
+                        "win32"
+                    ]
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {}
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
+        }
     }
 }

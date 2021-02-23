@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 
 function useDefaultAvatar(img) {
-    $(img).attr("src", "./img/avatardefault.png").addClass("sem-avatar");
+    $(img).attr("src", __dirname + "/img/avatardefault.png").addClass("sem-avatar");
 }
 
 ipcRenderer.on('users-disk', (event, users, steampath) => {

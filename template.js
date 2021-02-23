@@ -86,7 +86,7 @@ module.exports = {
         }
     },
     notificaNovo() {
-        let img = new nativeImage.createFromPath('./src/img/avatardefault.png');
+        let img = new nativeImage.createFromPath(__dirname + '/src/img/avatardefault.png');
         return {
             title: `Adicionando nova conta`,
             body: `Faça login na steam normalmente.`,

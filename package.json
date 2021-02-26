@@ -34,7 +34,8 @@
         "auto-launch": "^5.0.5",
         "bootstrap": "^4.6.0",
         "electron-squirrel-startup": "^1.0.0",
-        "jquery": "^3.5.1"
+        "jquery": "^3.5.1",
+        "jsonfile": "^6.1.0"
     },
     "config": {
         "forge": {
@@ -43,7 +44,8 @@
                 "icon": "./src/img/appicon/FastLogin.ico",
                 "overwrite": true
             },
-            "makers": [{
+            "makers": [
+                {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "FastLogin",

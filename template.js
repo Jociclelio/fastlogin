@@ -3,10 +3,11 @@ const { Menu, nativeImage, ipcMain, NativeImage } = require('electron');
 module.exports = {
     appMenu(usersDisk, steampath) {
         let menu = [];
-        let removersubmenu = [];
+        let removeSubmenu = [];
+
         usersDisk.map((user) => {
             let ico = new nativeImage.createFromPath(steampath + "/config/avatarcache/" + user[0] + ".png").resize({ with: 16, height: 16, quality: "good" });
-            removersubmenu.push({
+            removeSubmenu.push({
                 label: `${user[1].PersonaName}`,
                 icon: ico,
                 click: () => {
@@ -24,14 +25,36 @@ module.exports = {
                 },
             }, {
                 label: "Remover conta",
-                submenu: removersubmenu
+                submenu: removeSubmenu
             }],
         })
         menu.push({
-            label: "Sobre",
-            click: () => {
-                ipcMain.emit('sobre');
-            },
+            label: "Opções",
+            submenu: [
+                {
+                    id:'StartWithWindows',
+                    label:'Iniciar com Windows',
+                    type: 'checkbox',
+                    checked: true,
+                },
+                {
+                    id:'StartMinimized',
+                    label:'Iniciar minimizado',
+                    type: 'checkbox',
+                    checked: true,
+                }
+            ]
+        })
+        menu.push({
+            label: "Ajuda",
+            submenu:[
+                {
+                    label: "Sobre",
+                    click: () => {
+                        ipcMain.emit('sobre');
+                    },
+                }
+            ]
         })
 
         return menu;

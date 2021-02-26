@@ -4,7 +4,7 @@ const { execSync } = require('child_process'); // executar comandos
 const https = require('https'); // baixar imaguem
 const stream = require('stream').Transform; // baixar imaguem
 const { ipcMain, dialog } = require('electron'); // comunicação
-const tp = require('./template');
+const tp = require('./template');//template
 
 module.exports = {
     steampath: null,
@@ -12,11 +12,13 @@ module.exports = {
     usersWeb: null,
     getSteamPath() {
         if (this.steampath == null) {
-            this.steampath = execSync("reg query HKCU\\Software\\Valve\\Steam /v SteamPath /t REG_SZ").toString().substring(69, 97);
+            stdout = execSync("reg query HKCU\\Software\\Valve\\Steam /v SteamPath /t REG_SZ").toString();
+            stdout = stdout.substring(stdout.indexOf('REG_SZ')+10)
+            this.steampath = stdout.substring(0,stdout.indexOf('\n')-1)
         }
         return this.steampath;
     },
-    getUsers() {
+    readUsers() {
         this.usersDisk = Object.entries(vdf.parse(String(fs.readFileSync(this.getSteamPath() + "/config/loginusers.vdf"))).users);
         this.getWebUsers();
         return this.usersDisk;
@@ -41,13 +43,16 @@ module.exports = {
             res.on('end', () => {
                 this.usersWeb = JSON.parse(data.read());
                 ipcMain.emit('users-web', this.usersWeb);
-                this.atualizar();
+                this.updateUsers();
             });
         });
     },
-    atualizar() {
+    updateUsers() {
         if (this.usersWeb == null) {
             this.getWebUsers();
+        }
+        if (!fs.existsSync(this.getSteamPath() + `/config/avatarcache`)){
+            fs.mkdirSync(this.getSteamPath() + `/config/avatarcache`);
         }
         this.usersWeb.response.players.map((userweb) => {
             this.usersDisk.map((userdisk) => {
@@ -58,17 +63,17 @@ module.exports = {
                 }
             });
             if (!fs.existsSync(this.getSteamPath() + `/config/avatarcache/${userweb.steamid}.png`)) {
-                this.baixarAvatar(userweb.steamid, userweb.avatarfull, userweb.avatarhash);
+                this.downloadAvatar(userweb.steamid, userweb.avatarfull, userweb.avatarhash);
             } else if (!fs.existsSync(this.getSteamPath() + `/config/avatarcache/${userweb.steamid}.hash`)) {
-                fs.writeFileSync(this.getSteamPath() + `/config/avatarcache/${userweb.steamid}.hash`, userweb.avatarhash);
+                this.downloadAvatar(userweb.steamid, userweb.avatarfull, userweb.avatarhash);
             } else if (fs.readFileSync(this.getSteamPath() + `/config/avatarcache/${userweb.steamid}.hash`) != userweb.avatarhash) {
-                this.baixarAvatar(userweb.steamid, userweb.avatarfull, userweb.avatarhash);
+                this.downloadAvatar(userweb.steamid, userweb.avatarfull, userweb.avatarhash);
             }
         });
         this.setUsers(this.usersDisk);
         ipcMain.emit('atualizado');
     },
-    baixarAvatar(userid, url, hash) {
+    downloadAvatar(userid, url, hash) {
         https.get(url, (res) => {
             let img = new stream();
             res.on('data', (chunk) => {

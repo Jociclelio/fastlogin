@@ -1,26 +1,63 @@
+if (require('electron-squirrel-startup')) return app.quit(); // Evita iniciar na instalação
 const { app, BrowserWindow, ipcMain, Tray, Notification, Menu, shell } = require('electron'); //Electron
 const AutoLaunch = require('auto-launch');
 const fl = require('./fastlogin');
+const jsonfile = require('jsonfile');
 const data = require('./data.js');
 const tp = require('./template');
-if (require('electron-squirrel-startup')) return app.quit();
-let autoLaunch = new AutoLaunch({
-    name: 'FastLogin',
+
+//Inicializar com o Windows
+const autoLaunch = new AutoLaunch({
+    name: app.getName(),
     path: app.getPath('exe'),
 });
-autoLaunch.isEnabled().then((isEnabled) => {
-    if (!isEnabled) autoLaunch.enable();
-});
+
+
+//Evitar dupla execução
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', () => {
+        if (win != null) {
+            if (win.isMinimized()){
+                win.restore()
+            }
+        win.focus()     
+        }else{
+            createWindow();
+        }
+    });
+}
 
 let win = null;
 let sobre = null;
 let tray = null;
+let menu = null;
+let config = { 
+    StartWithWindows:true,
+    StartMinimized:true
+};
 
 app.whenReady().then(() => {
-    data.getUsers();
-    createWindow();
+    data.readUsers();
+
+    menu = Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath))
+    jsonfile.readFile(__dirname + '/config.json', (err, obj)=>{
+        config = obj;
+        if (err) console.error(err)
+        menu.getMenuItemById('StartMinimized').checked = config.StartMinimized;
+        menu.getMenuItemById('StartWithWindows').checked = config.StartWithWindows;
+        if(!config.StartMinimized){
+            createWindow();
+        }
+    });
+
+    
+
+
     tray = new Tray(__dirname + "/src/img/appicon/FastLogin.ico");
-    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
+    
     tray.on('click', () => {
         if (win != null) {
             win.focus();
@@ -30,9 +67,14 @@ app.whenReady().then(() => {
     });
 });
 
+function updateMenus(){
+    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
+    Menu.setApplicationMenu(menu);
+}
+
 function createWindow() {
-    data.getUsers();
-    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
+    data.readUsers();
+    updateMenus();
     let colunas = 5;
     let largura = (130 * colunas) + (8 * (colunas - 1)) + 20;
     let altura;
@@ -56,6 +98,9 @@ function createWindow() {
         });
         win.on('closed', () => {
             win = null;
+            config.StartWithWindows = menu.getMenuItemById('StartWithWindows').checked;
+            config.StartMinimized = menu.getMenuItemById('StartMinimized').checked;
+            jsonfile.writeFile('./config.json',config,{ spaces: 2 })
             if (sobre != null) {
                 sobre.close();
             }
@@ -122,12 +167,10 @@ ipcMain.on('delete-user', (event, user) => {
 });
 ipcMain.on('deleted-user', (event, user) => {
     win.send('deleted-user', user);
-    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
-    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
+    updateMenus();
 })
 ipcMain.on('atualizado', () => {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath)));
-    tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
+    updateMenus();
 });
 ipcMain.on('recarregar-img', (userid, url) => {
     if (win != null) {
@@ -152,5 +195,18 @@ ipcMain.on('abrir-rede', (event, data) => {
     shell.openExternal(redes[data]);
 })
 ipcMain.on('fechar', () => {
+    if(config.StartWithWindows){
+        autoLaunch.isEnabled().then((isEnabled) => {
+            if (!isEnabled){
+                autoLaunch.enable();
+            } 
+        });
+    } else {
+        autoLaunch.isEnabled().then((isEnabled) => {
+            if (isEnabled){
+                autoLaunch.disable();
+            } 
+        });
+    }
     app.quit();
 });

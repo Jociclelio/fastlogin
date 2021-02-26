@@ -1,11 +1,10 @@
-if (require('electron-squirrel-startup')) return app.quit(); // Evita iniciar na instalação
 const { app, BrowserWindow, ipcMain, Tray, Notification, Menu, shell } = require('electron'); //Electron
 const AutoLaunch = require('auto-launch');
 const fl = require('./fastlogin');
 const jsonfile = require('jsonfile');
 const data = require('./data.js');
 const tp = require('./template');
-
+if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalação
 //Inicializar com o Windows
 const autoLaunch = new AutoLaunch({
     name: app.getName(),

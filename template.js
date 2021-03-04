@@ -1,5 +1,10 @@
-const { Menu, nativeImage, ipcMain, NativeImage } = require('electron');
+const { Menu, nativeImage, ipcMain} = require('electron');
+const { language } = require('./config.json');
+let lang = false;
+if(language != "english") try {lang = require(`./lang/${language}.json`)} catch{};
 
+
+//console.log(lang.menuTexts.acconnts.title);
 module.exports = {
     appMenu(usersDisk, steampath) {
         let menu = [];
@@ -11,45 +16,51 @@ module.exports = {
                 label: `${user[1].PersonaName}`,
                 icon: ico,
                 click: () => {
-                    //console.log(user[1].PersonaName);
                     ipcMain.emit('delete-user', null, user);
                 }
             });
         });
+        //console.log(lang.menuTexts.acconnts.title)
         menu.push({
-            label: "Contas",
+            label: `${lang ? lang.menu.acconnts.title : "Acconnts"}`,
             submenu: [{
-                label: "Adicionar conta",
+                label: `${lang ? lang.menu.acconnts.addAccount : "Add account"}`,
                 click: () => {
                     ipcMain.emit('login', null, null);
                 },
             }, {
-                label: "Remover conta",
+                label: `${lang ? lang.menu.acconnts.removeAccount : "Remove account"}`,
                 submenu: removeSubmenu
             }],
         })
         menu.push({
-            label: "Opções",
+            label: `${lang ? lang.menu.options.title : "Options"}`,
             submenu: [
                 {
                     id:'StartWithWindows',
-                    label:'Iniciar com Windows',
+                    label:`${lang ? lang.menu.options.startWithWindows : "Start with windows"}`,
                     type: 'checkbox',
                     checked: true,
+                    click:() => {
+                        ipcMain.emit('SaveConfig', null, this);
+                    },
                 },
                 {
                     id:'StartMinimized',
-                    label:'Iniciar minimizado',
+                    label:`${lang ? lang.menu.options.startMinimized : "Start minimized"}`,
                     type: 'checkbox',
                     checked: true,
+                    click:() => {
+                        ipcMain.emit('SaveConfig', null, this);
+                    },
                 }
             ]
         })
         menu.push({
-            label: "Ajuda",
+            label: `${lang ? lang.menu.help.title : "Help"}`,
             submenu:[
                 {
-                    label: "Sobre",
+                    label: `${lang ? lang.menu.help.about : "About"}`,
                     click: () => {
                         ipcMain.emit('sobre');
                     },
@@ -62,7 +73,7 @@ module.exports = {
     trayMenu(usersDisk, steampath) {
         let menu = [];
         menu.push({
-            label: "Adicionar conta",
+            label: `${lang ? lang.tray.addAccount : "Add account"}`,
             click: () => {
                 ipcMain.emit('login', null, null);
             }
@@ -85,13 +96,13 @@ module.exports = {
             type: "separator",
         });
         menu.push({
-            label: "Mostrar",
+            label: `${lang ? lang.tray.show : "Show"}`,
             click: () => {
                 ipcMain.emit('abrir');
             }
         });
         menu.push({
-            label: "Fechar",
+            label: `${lang ? lang.tray.exit : "Exit"}`,
             click: () => {
                 ipcMain.emit('fechar');
             }
@@ -102,8 +113,8 @@ module.exports = {
     notifica(user, steampath) {
         let img = new nativeImage.createFromPath(steampath + "/config/avatarcache/" + user[0] + ".png");
         return {
-            title: `${user[1].PersonaName} Está entrando...`,
-            body: `Logando... ${user[1].AccountName}`,
+            title: `${user[1].PersonaName} ${lang ? lang.notfication.login.title : "Is joining..."}`,
+            body: `${lang ? lang.tray.body : "Logining..."}`,
             icon: img,
             silent: true,
         }
@@ -111,8 +122,8 @@ module.exports = {
     notificaNovo() {
         let img = new nativeImage.createFromPath(__dirname + '/src/img/avatardefault.png');
         return {
-            title: `Adicionando nova conta`,
-            body: `Faça login na steam normalmente.`,
+            title: `${lang ? lang.notfication.login.title : "Adding new account"}`,
+            body: `${lang ? lang.notfication.login.body : "Login to steam normally."}`,
             icon: img,
             silent: true,
         }
@@ -121,10 +132,12 @@ module.exports = {
         let img = new nativeImage.createFromPath(steampath + "/config/avatarcache/" + user[0] + ".png");
         return {
             type: 'info',
-            title: `Removendo Conta ${user[1].PersonaName}`,
+            title: `${lang ? lang.dialog.title : "Removing account"} ${user[1].PersonaName}`,
             icon: img,
-            message: `Deseja mesmo remover a conta ${user[1].PersonaName} ?`,
-            buttons: ['Sim', 'Não']
+            noLink: true,
+            cancelId: 1,
+            message: `${lang ? lang.dialog.message : "Do you really want to remove the account"} ${user[1].PersonaName} ?`,
+            buttons: (lang ? lang.dialog.buttons : ["Yes","No"])
         }
     }
 }

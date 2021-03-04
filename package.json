@@ -1,6 +1,6 @@
 {
     "name": "fastlogin",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Trocar de conta Steam",
     "main": "main.js",
     "scripts": {
@@ -35,7 +35,8 @@
         "bootstrap": "^4.6.0",
         "electron-squirrel-startup": "^1.0.0",
         "jquery": "^3.5.1",
-        "jsonfile": "^6.1.0"
+        "jsonfile": "^6.1.0",
+        "update-electron-app": "^2.0.1"
     },
     "config": {
         "forge": {

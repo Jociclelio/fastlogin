@@ -1,61 +1,51 @@
 const { app, BrowserWindow, ipcMain, Tray, Notification, Menu, shell } = require('electron'); //Electron
-const AutoLaunch = require('auto-launch');
 const fl = require('./fastlogin');
-const jsonfile = require('jsonfile');
 const data = require('./data.js');
 const tp = require('./template');
+const jsonfile = require('jsonfile');
+const AutoLaunch = require('auto-launch');
+
+const config = require(`./config.json`);
+
+require('update-electron-app')({
+    repo: 'Jociclelio/fastlogin',
+    updateInterval: '1 hour',
+})
+
 if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalação
-//Inicializar com o Windows
-const autoLaunch = new AutoLaunch({
-    name: app.getName(),
-    path: app.getPath('exe'),
-});
 
-
-//Evitar dupla execução
+const autoLaunch = new AutoLaunch({name: app.getName(), path: app.getPath('exe'),});
 const gotTheLock = app.requestSingleInstanceLock();
+
 if (!gotTheLock) {
     app.quit()
 } else {
     app.on('second-instance', () => {
         if (win != null) {
             if (win.isMinimized()){
-                win.restore()
+                win.restore();
             }
-        win.focus()     
+        win.focus();
         }else{
             createWindow();
         }
     });
 }
 
+
 let win = null;
 let sobre = null;
 let tray = null;
 let menu = null;
-let config = { 
-    StartWithWindows:true,
-    StartMinimized:true
-};
 
 app.whenReady().then(() => {
     data.readUsers();
 
-    menu = Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath))
-    jsonfile.readFile(__dirname + '/config.json', (err, obj)=>{
-        config = obj;
-        if (err) console.error(err)
-        menu.getMenuItemById('StartMinimized').checked = config.StartMinimized;
-        menu.getMenuItemById('StartWithWindows').checked = config.StartWithWindows;
-        if(!config.StartMinimized){
-            createWindow();
-        }
-    });
-
-    
-
-
     tray = new Tray(__dirname + "/src/img/appicon/FastLogin.ico");
+    updateMenus();
+
+    menu.getMenuItemById('StartMinimized').checked = config.startMinimized;
+    menu.getMenuItemById('StartWithWindows').checked = config.startWithWindows;
     
     tray.on('click', () => {
         if (win != null) {
@@ -64,10 +54,15 @@ app.whenReady().then(() => {
             createWindow();
         }
     });
+
+    if(!config.startMinimized){
+        createWindow();
+    }
 });
 
 function updateMenus(){
     tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
+    menu = Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath))
     Menu.setApplicationMenu(menu);
 }
 
@@ -97,9 +92,9 @@ function createWindow() {
         });
         win.on('closed', () => {
             win = null;
-            config.StartWithWindows = menu.getMenuItemById('StartWithWindows').checked;
-            config.StartMinimized = menu.getMenuItemById('StartMinimized').checked;
-            jsonfile.writeFile('./config.json',config,{ spaces: 2 })
+            config.startWithWindows = menu.getMenuItemById('StartWithWindows').checked;
+            config.startMinimized = menu.getMenuItemById('StartMinimized').checked;
+            jsonfile.writeFile('./config.json',config,{ spaces: 2 });
             if (sobre != null) {
                 sobre.close();
             }
@@ -135,9 +130,8 @@ function createSobre() {
     sobre.loadFile('./src/sobre.html');
 }
 app.on('window-all-closed', () => {
-
-})
-
+    //Nada
+});
 
 ipcMain.on('login', (event, user) => {
     if (user != null) {
@@ -155,22 +149,25 @@ ipcMain.on('login', (event, user) => {
     }
 });
 
-
 ipcMain.on('users-web', () => {
     if (win != null) {
         win.send('users-web', data.usersWeb);
     }
-})
-ipcMain.on('delete-user', (event, user) => {
-    data.deleteUser(user)
 });
+
+ipcMain.on('delete-user', (event, user) => {
+    data.deleteUser(user);
+});
+
 ipcMain.on('deleted-user', (event, user) => {
     win.send('deleted-user', user);
     updateMenus();
-})
+});
+
 ipcMain.on('atualizado', () => {
     updateMenus();
 });
+
 ipcMain.on('recarregar-img', (userid, url) => {
     if (win != null) {
         win.send('recarregar-img', userid, url);

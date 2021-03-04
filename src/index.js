@@ -5,7 +5,6 @@ function useDefaultAvatar(img) {
 }
 
 ipcRenderer.on('users-disk', (event, users, steampath) => {
-    console.log("Gerando Conteudo");
     let divs = "";
     users.map((user) => {
         divs += (`
@@ -37,10 +36,10 @@ ipcRenderer.on('users-disk', (event, users, steampath) => {
 });
 ipcRenderer.on('users-web', (event, webusers) => {
     let personastate = ['Offline', 'Online', 'Ocupado', 'Away', 'Dormindo', 'Trade', 'jogando'];
-    let cor = ['secondary', 'primary', 'danger', 'light', 'info', 'success', 'warning'];
+    let color = ['secondary', 'primary', 'danger', 'light', 'info', 'success', 'warning'];
     webusers.response.players.map((player) => {
-        $(`#${player.steamid}`).removeClass('border-secondary').addClass(`border-${cor[player.personastate]}`); // Troca a borda
-        $(`#${player.steamid} .state`).text(personastate[player.personastate]).removeClass('text-secondary').addClass(`text-${cor[player.personastate]}`); //troca do status
+        $(`#${player.steamid}`).removeClass('border-secondary').addClass(`border-${color[player.personastate]}`); // Troca a borda
+        $(`#${player.steamid} .state`).text(personastate[player.personastate]).removeClass('text-secondary').addClass(`text-${color[player.personastate]}`); //troca do status
         if ($(`#${player.steamid} .name`).text() != player.personaname) { //verifica se o nome trocou, se sim troca o nome
             $(`#${player.steamid} .name`).text(player.personaname);
         }

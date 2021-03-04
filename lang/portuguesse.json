@@ -1,0 +1,38 @@
+{
+    "menu":{
+        "acconnts":{
+            "title": "Contas",
+            "addAccount": "Adicionar conta",
+            "removeAccount": "Remover conta"
+        },
+        "options":{
+            "title":"Opções",
+            "startWithWindows":"Iniciar com Windows",
+            "startMinimized":"Iniciar minimizado"
+        },
+        "help":{
+            "title":"Ajuda",
+            "about":"Sobre"
+        }
+    },
+    "tray":{
+        "addAccount":"Adicionar conta",
+        "show":"Mostrar",
+        "exit":"Fechar" 
+    },
+    "notfication":{
+        "login":{
+            "title": "Está entrando...",
+            "body": "Logando..."
+        },
+        "newlogin":{
+            "title": "Adicionando nova conta",
+            "body": "Faça login na steam normalmente."
+        }
+    },
+    "dialog":{
+        "title": "Removendo Conta",
+        "message": "Deseja mesmo remover a conta",
+        "buttons": ["Sim", "Não"]
+    }
+}

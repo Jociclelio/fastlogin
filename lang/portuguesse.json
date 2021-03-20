@@ -8,7 +8,9 @@
         "options":{
             "title":"Opções",
             "startWithWindows":"Iniciar com Windows",
-            "startMinimized":"Iniciar minimizado"
+            "startMinimized":"Iniciar minimizado",
+            "alowNotification":"Habilitar noticiações",
+            "language": "Linguagem"
         },
         "help":{
             "title":"Ajuda",
@@ -32,7 +34,7 @@
     },
     "dialog":{
         "title": "Removendo Conta",
-        "message": "Deseja mesmo remover a conta",
+        "message": "Deseja mesmo remover a conta?",
         "buttons": ["Sim", "Não"]
     }
 }

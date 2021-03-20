@@ -31,8 +31,7 @@ ipcRenderer.on('users-disk', (event, users, steampath) => {
         console.log($(this).attr("value"));
         ipcRenderer.send('login', $(this).attr("value"));
     });
-
-
+    
 });
 ipcRenderer.on('users-web', (event, webusers) => {
     let personastate = ['Offline', 'Online', 'Ocupado', 'Away', 'Dormindo', 'Trade', 'jogando'];

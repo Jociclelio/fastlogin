@@ -4,13 +4,8 @@ const data = require('./data.js');
 const tp = require('./template');
 const jsonfile = require('jsonfile');
 const AutoLaunch = require('auto-launch');
-
 const config = require(`./config.json`);
-
-require('update-electron-app')({
-    repo: 'Jociclelio/fastlogin',
-    updateInterval: '1 hour',
-});
+ 
 
 if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalação
 
@@ -71,19 +66,19 @@ function updateMenus(){
 function createWindow() {
     data.readUsers();
     updateMenus();
-    let colunas = 5;
-    let largura = (130 * colunas) + (8 * (colunas - 1)) + 20;
-    let altura;
-    if ((data.usersDisk.length / colunas) % 1 == 0) {
-        altura = (188 * Math.trunc(data.usersDisk.length / colunas)) + 58;
+    let columns = config.columns;
+    let largura = (130 * columns) + (8 * (columns - 1)) + 20;
+    let height;
+    if ((data.usersDisk.length / columns) % 1 == 0) {
+        height = (188 * Math.trunc(data.usersDisk.length / columns)) + 58;
     } else {
-        altura = (188 * Math.trunc((data.usersDisk.length / colunas) + 1)) + 54;
+        height = (188 * Math.trunc((data.usersDisk.length / columns) + 1)) + 54;
     }
     if (win == null) {
         win = new BrowserWindow({
             transparent: true,
             width: largura,
-            height: altura,
+            height: height,
             icon: './src/img/appicon/FastLogin.ico',
             show: false,
             title: `FastLogin - v${app.getVersion()}`,
@@ -197,7 +192,6 @@ ipcMain.on('open-rede', (event, data) => {
     shell.openExternal(redes[data]);
 });
 ipcMain.on('change-language', (event, language)=>{
-    console.log(language)
     config.language = language;
     if (win != null) {
         win.close();

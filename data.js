@@ -88,11 +88,9 @@ module.exports = {
     },
     deleteUser(user) {
         this.usersDisk.findIndex((element, index, array) => {
-            console.log('deteledUser()'+ element + "  " + user)
             if (element[0] === user[0]) {
                 dialog.showMessageBox(tp.removeDialog(user, this.steampath))
                     .then((resposta) => {
-                        console.log(resposta);
                         if (resposta.response === 0) {
                             this.usersDisk.splice(index, 1);
                             this.setUsers();

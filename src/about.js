@@ -19,8 +19,9 @@ $(document).ready(function() {
 function abrir(rede) {
     ipcRenderer.send('abrir-rede', rede);
 }
-ipcRenderer.on('versao', (event, versao) => {
-    $('.title').text(`Fastlogin - v${versao}`);
+
+ipcRenderer.on('version', (event, version) => {
+    $('.title').text(`Fastlogin - v${version}`);
 });
 $.get(`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=16464C7E103DEC58BEC7BD72E12AAC49&steamids=76561198254066736`, (data, status) => {
     $('.steamimg').attr('src', data.response.players[0].avatarfull);

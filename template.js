@@ -4,8 +4,6 @@ let { language } = require('./config.json');
 let lang = false;
 if(language != "english") try {lang = require(`./lang/${language}.json`)} catch{};
 
-
-//console.log(lang.menuTexts.acconnts.title);
 module.exports = {
     appMenu(usersDisk, steampath) {
         let menu = [];
@@ -22,7 +20,6 @@ module.exports = {
                 }
             });
         });
-        //console.log(lang.menuTexts.acconnts.title)
         menu.push({
             label: `${lang && lang.menu.acconnts.title ? lang.menu.acconnts.title : "Acconnts"}`,
             submenu: [{
@@ -73,7 +70,6 @@ module.exports = {
                     checked: true,
                     click:() => {
                         ipcMain.emit('save-config', null, this);
-                        console.log('startWithWindows');
                     },
                 },
                 {
@@ -83,17 +79,15 @@ module.exports = {
                     checked: true,
                     click:() => {
                         ipcMain.emit('save-config', null, this);
-                        console.log('startMinimized');
                     },
                 },
                 {
                     id:'alowNotification',
-                    label:`${lang && lang.menu.options.alowNotification ? lang.menu.options.alowNotification : "Alow Notification"}`,
+                    label:`${lang && lang.menu.options.alowNotification ? lang.menu.options.alowNotification : "Alow notifications"}`,
                     type: 'checkbox',
                     checked: true,
                     click:() => {
                         ipcMain.emit('save-config', null, this);
-                        console.log('alowNotification');
                     },
                 },
                 {
@@ -133,7 +127,6 @@ module.exports = {
                 label: `${user[1].PersonaName}`,
                 icon: ico,
                 click: () => {
-                    //console.log(user[1].PersonaName);
                     ipcMain.emit('login', null, user[1].AccountName);
                 }
             });

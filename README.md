@@ -6,7 +6,7 @@ Allowing you to switch between steam accounts with one click.
 ## Fetures
 
 - Ignores steamgard
-- Avatar icons
+- Profile images
 - Menu in tray
 - Account states
 
@@ -46,5 +46,63 @@ cmd /c start steam://open/main
 ## How to use
 
 To Switch accounts with the FastLogin you must to:
-- never logout in the steam app
-- sign in to accounts at least once
+- Never logout in the steam app
+- Sign in to accounts at least once
+
+## Download
+
+[FastLogin-1.0.7 Setup.exe](https://drive.google.com/u/0/uc?id=1foRwr1LSONRXJuaXJVjumsVw9nF4hE1O&export=download)
+
+# FastLogin (Português)
+
+Uma forma rápida de trocar de contas steam no PC.
+podendo trocar de contas com a facilicade de um click.
+
+## Fetures
+
+- Ignora steamgard
+- Tem imagens de perfil
+- Tem ícone na bandeja
+- Estados de conta
+
+### Requisitos
+
+- Windows
+- Steam
+- Internet
+
+## Como funciona
+
+Funciona com três etapas ou três comandos do powershell
+
+### Mata o processo da steam
+Usa o comando taskkill para matar o processo da steam, e os filhos do processo, incluindo jogos abertos
+```
+taskkill /F /IM steam.exe /T
+```
+
+### Muda o usuário logado
+Muda o usuário logado pelo regedit
+```
+reg add \"HKCU\\Software\\Valve\\Steam\" /v AutoLoginUser /t REG_SZ /d username /f
+```
+
+E marca a opção de lembrar a senha 
+```
+reg add \"HKCU\\Software\\Valve\\Steam\" /v RememberPassword /t REG_DWORD /d 1 /f
+```
+### Abre a Steam novamente
+Abre a steam chamando ela pelo protocolo própio
+```
+cmd /c start steam://open/main
+```
+	
+## Como usar
+
+Para trocar de contas usando o FastLogin voce tem que:
+- Nunca deslogar as contas da steam
+- Logar em cada conta pelo menos uma vez
+
+## Baixar
+
+[FastLogin-1.0.7 Setup.exe](https://drive.google.com/u/0/uc?id=1foRwr1LSONRXJuaXJVjumsVw9nF4hE1O&export=download)

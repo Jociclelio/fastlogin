@@ -22,14 +22,20 @@ This works in three steps our three powershell commands
 
 ### Kill Steam process
 Use the taskkill to kill the steam process, and the childreen too, included open games
-`taskkill /F /IM steam.exe /T`
+```
+taskkill /F /IM steam.exe /T
+```
 
 ### Change the loged user
 Change the loged user in the windows regedit
-`reg add \"HKCU\\Software\\Valve\\Steam\" /v AutoLoginUser /t REG_SZ /d username /f`
+```
+reg add \"HKCU\\Software\\Valve\\Steam\" /v AutoLoginUser /t REG_SZ /d username /f
+```
 
 And mark to remember the password
-`reg add \"HKCU\\Software\\Valve\\Steam\" /v RememberPassword /t REG_DWORD /d 1 /f`
+```
+reg add \"HKCU\\Software\\Valve\\Steam\" /v RememberPassword /t REG_DWORD /d 1 /f
+```
 ### Open Steam again
 
 Open the steam main calling the steam protocol

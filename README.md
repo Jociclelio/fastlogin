@@ -39,7 +39,9 @@ reg add \"HKCU\\Software\\Valve\\Steam\" /v RememberPassword /t REG_DWORD /d 1 /
 ### Open Steam again
 
 Open the steam main calling the steam protocol
-`cmd /c start steam://open/main`
+```
+cmd /c start steam://open/main
+```
 	
 ## How to use
 

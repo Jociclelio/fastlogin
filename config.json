@@ -2,8 +2,7 @@
   "firstOpen": true,
   "startWithWindows": true,
   "startMinimized": true,
-  "alowNotifications": true,
-  "language": "english",
-  "columns": "5",
-  "alowNotification": true
+  "alowNotification": true,
+  "language": "portuguese",
+  "columns": "5"
 }

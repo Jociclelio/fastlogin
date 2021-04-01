@@ -6,7 +6,6 @@ const jsonfile = require('jsonfile');
 const AutoLaunch = require('auto-launch');
 const config = require(`./config.json`);
  
-
 if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalação
 
 app.setAboutPanelOptions({iconPath: __dirname+"/src/img/appicon/FastLogin.ico"});
@@ -14,7 +13,7 @@ const autoLaunch = new AutoLaunch({name: app.getName(), path: app.getPath('exe')
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-    app.quit()
+    app.quit();
 } else {
     app.on('second-instance', () => {
         if (win != null) {
@@ -34,16 +33,12 @@ let tray = null;
 let menu = null;
 
 app.whenReady().then(() => {
+    //console.log(navigator.onLine);
     data.readUsers();
 
     tray = new Tray(__dirname + "/src/img/appicon/FastLogin.ico");
     updateMenus();
 
-    
-    menu.getMenuItemById('startMinimized').checked = config.startMinimized;
-    menu.getMenuItemById('startWithWindows').checked = config.startWithWindows;
-    menu.getMenuItemById('alowNotification').checked = config.alowNotification;
-    
     tray.on('click', () => {
         if (win != null) {
             win.focus();
@@ -61,13 +56,16 @@ function updateMenus(){
     tray.setContextMenu(tp.trayMenu(data.usersDisk, data.steampath));
     menu = Menu.buildFromTemplate(tp.appMenu(data.usersDisk, data.steampath))
     Menu.setApplicationMenu(menu);
+    menu.getMenuItemById('startMinimized').checked = config.startMinimized;
+    menu.getMenuItemById('startWithWindows').checked = config.startWithWindows;
+    menu.getMenuItemById('alowNotification').checked = config.alowNotification;
 }
 
 function createWindow() {
     data.readUsers();
     updateMenus();
     let columns = config.columns;
-    let largura = (130 * columns) + (8 * (columns - 1)) + 20;
+    let width = (130 * columns) + (8 * (columns - 1)) + 20;
     let height;
     if ((data.usersDisk.length / columns) % 1 == 0) {
         height = (188 * Math.trunc(data.usersDisk.length / columns)) + 58;
@@ -77,19 +75,20 @@ function createWindow() {
     if (win == null) {
         win = new BrowserWindow({
             transparent: true,
-            width: largura,
+            width: width,
             height: height,
             icon: './src/img/appicon/FastLogin.ico',
             show: false,
             title: `FastLogin - v${app.getVersion()}`,
             webPreferences: {
+                preload:__dirname + "/src/index.js",
                 contextIsolation: false,
                 nodeIntegration: true
             }
         });
         win.on('closed', () => {
-            win = null;
             ipcMain.emit('save-config');
+            win = null;
             if (about != null) {
                 about.close();
             }
@@ -164,13 +163,13 @@ ipcMain.on('deleted-user', (event, user) => {
     updateMenus();
 });
 
-ipcMain.on('atualizado', () => {
+ipcMain.on('updated', () => {
     updateMenus();
 });
 
-ipcMain.on('recarregar-img', (userid, url) => {
+ipcMain.on('reload-img', (userid, url) => {
     if (win != null) {
-        win.send('recarregar-img', userid, url);
+        win.send('reload-img', userid, url);
     }
 
 });
@@ -192,13 +191,13 @@ ipcMain.on('open-rede', (event, data) => {
     shell.openExternal(redes[data]);
 });
 ipcMain.on('change-language', (event, language)=>{
+    //ipcMain.emit('save-config');
     config.language = language;
     if (win != null) {
         win.close();
         if(about != null) about.close();
         createWindow();
     }
-    ipcMain.emit('save-config');
 });
 ipcMain.on('save-config',()=>{
     config.startWithWindows = menu.getMenuItemById('startWithWindows').checked;
@@ -206,7 +205,9 @@ ipcMain.on('save-config',()=>{
     config.alowNotification = menu.getMenuItemById('alowNotification').checked;
     jsonfile.writeFile('./config.json', config ,{ spaces: 2 });
 });
-
+ipcMain.on('log', (event,data) =>{
+    console.log(data);
+});
 
 ipcMain.on('close', () => {
     if(config.StartWithWindows){

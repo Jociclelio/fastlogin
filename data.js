@@ -34,6 +34,7 @@ module.exports = {
         this.usersDisk.map((user) => {
             steamids += user[0] + " ";
         });
+        
         https.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=16464C7E103DEC58BEC7BD72E12AAC49&steamids=${steamids}`, (res) => {
             let data = new stream();
             res.setEncoding('utf8');
@@ -71,7 +72,7 @@ module.exports = {
             }
         });
         this.setUsers(this.usersDisk);
-        ipcMain.emit('atualizado');
+        ipcMain.emit('updated');
     },
     downloadAvatar(userid, url, hash) {
         https.get(url, (res) => {
@@ -81,7 +82,7 @@ module.exports = {
             });
             res.on('close', () => {
                 fs.writeFileSync(this.getSteamPath() + `/config/avatarcache/${userid}.png`, img.read());
-                ipcMain.emit('recarregar-img', userid, url);
+                ipcMain.emit('updated-img', userid, url);
             });
         })
         fs.writeFileSync(this.getSteamPath() + `/config/avatarcache/${userid}.hash`, hash);

@@ -44,7 +44,7 @@ module.exports = {
                 ipcMain.emit('change-language', null, "english");
             },
         });
-        fs.readdirSync("./lang").forEach(languageFile => {
+        fs.readdirSync(__dirname+"/lang").forEach(languageFile => {
             if (!languageFile.endsWith(".json")) return;
             languageFile = languageFile.replace(".json", "");
             languageSubmenu.push({

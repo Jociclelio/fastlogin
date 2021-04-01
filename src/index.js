@@ -1,10 +1,25 @@
 const { ipcRenderer } = require('electron');
+const { language } = require('../config.json');
+let lang;
+if(language !== "english"){
+    try {
+        lang = require(`../lang/${language}.json`);
+    } catch{
+    }
+}else{
+    lang = {
+        body:{
+            personastate: ["Offline", "Online", "Ocupado", "Away", "Dormindo", "Trade", "jogando"]
+        },
+    }
+}
 
 function useDefaultAvatar(img) {
     $(img).attr("src", __dirname + "/img/avatardefault.png").addClass("sem-avatar");
 }
 
 ipcRenderer.on('users-disk', (event, users, steampath) => {
+    
     let divs = "";
     users.map((user) => {
         divs += (`
@@ -34,11 +49,11 @@ ipcRenderer.on('users-disk', (event, users, steampath) => {
     
 });
 ipcRenderer.on('users-web', (event, webusers) => {
-    let personastate = ['Offline', 'Online', 'Ocupado', 'Away', 'Dormindo', 'Trade', 'jogando'];
+    //let personastate = ['Offline', 'Online', 'Busy', 'Away', 'Snooze', 'Looking to trade', 'Looking to play'];
     let color = ['secondary', 'primary', 'danger', 'light', 'info', 'success', 'warning'];
     webusers.response.players.map((player) => {
         $(`#${player.steamid}`).removeClass('border-secondary').addClass(`border-${color[player.personastate]}`); // Troca a borda
-        $(`#${player.steamid} .state`).text(personastate[player.personastate]).removeClass('text-secondary').addClass(`text-${color[player.personastate]}`); //troca do status
+        $(`#${player.steamid} .state`).text(lang.body.personastate[player.personastate]).removeClass('text-secondary').addClass(`text-${color[player.personastate]}`); //troca do status
         if ($(`#${player.steamid} .name`).text() != player.personaname) { //verifica se o nome trocou, se sim troca o nome
             $(`#${player.steamid} .name`).text(player.personaname);
         }
@@ -47,7 +62,7 @@ ipcRenderer.on('users-web', (event, webusers) => {
         }
     });
 })
-ipcRenderer.on('recarregar-img', (event, userid, url) => {
+ipcRenderer.on('reload-img', (event, userid, url) => {
     $(`#${userid} .avatar`).attr("src", url);
 })
 ipcRenderer.on('deleted-user', (event, user) => {

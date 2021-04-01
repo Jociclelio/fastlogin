@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 
 function abrir(rede) {
-    ipcRenderer.send('abrir-rede', rede);
+    ipcRenderer.send('open-rede', rede);
 }
 
 ipcRenderer.on('version', (event, version) => {

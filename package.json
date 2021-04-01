@@ -1,6 +1,6 @@
 {
     "name": "fastlogin",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "Trocar de conta Steam",
     "main": "main.js",
     "scripts": {
@@ -28,7 +28,8 @@
         "@electron-forge/maker-rpm": "^6.0.0-beta.54",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
         "@electron-forge/maker-zip": "^6.0.0-beta.54",
-        "electron": "^11.3.0"
+        "electron": "^11.3.0",
+        "electron-builder": "^22.10.5"
     },
     "dependencies": {
         "auto-launch": "^5.0.5",

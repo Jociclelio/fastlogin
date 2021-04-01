@@ -1,4 +1,7 @@
 {
+    "body":{
+        "personastate": ["Offline", "Online", "Ocupado", "Away", "Dormindo", "Trade", "jogando"]
+    },
     "menu":{
         "acconnts":{
             "title": "Contas",

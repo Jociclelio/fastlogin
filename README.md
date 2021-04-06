@@ -4,7 +4,8 @@
 ---
 
 <h1 id="fastlogin">FastLogin</h1>
-<p>A quicker way to switch Steam accounts on your computer.<br>
+<p><img src="https://github.com/Jociclelio/fastlogin/blob/master/src/img/readme/printwindow.png?raw=true" alt="Print"><br>
+A quicker way to switch Steam accounts on your computer.<br>
 Allowing you to switch between steam accounts with one click.</p>
 <h2 id="fetures">Fetures</h2>
 <ul>
@@ -84,6 +85,7 @@ podendo trocar de contas com a facilicade de um click.</p>
 <li>Nunca deslogar as contas da steam<br>
 <img src="https://github.com/Jociclelio/fastlogin/blob/master/src/img/readme/TrocarConta.png?raw=true" alt="Botão de trocar conta"></li>
 <li>Logar em cada conta pelo menos uma vez</li>
+<li>Usar o FastLogin</li>
 </ul>
 <h2 id="baixar">Baixar</h2>
 <p><a href="https://github.com/Jociclelio/fastlogin/releases">Releases</a></p>

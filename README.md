@@ -100,7 +100,7 @@ cmd /c start steam://open/main
 ## Como usar
 
 Para trocar de contas usando o FastLogin voce tem que:
-- Nunca deslogar as contas da steam
+- Nunca deslogar da steam 
 - Logar em cada conta pelo menos uma vez
 
 ## Baixar

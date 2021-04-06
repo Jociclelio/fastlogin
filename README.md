@@ -51,7 +51,7 @@ To Switch accounts with the FastLogin you must to:
 
 ## Download
 
-[FastLogin-1.0.7 Setup.exe](https://drive.google.com/u/0/uc?id=1foRwr1LSONRXJuaXJVjumsVw9nF4hE1O&export=download)
+[Releases](https://github.com/Jociclelio/fastlogin/releases)
 
 # FastLogin (Português)
 
@@ -105,4 +105,4 @@ Para trocar de contas usando o FastLogin voce tem que:
 
 ## Baixar
 
-[FastLogin-1.0.7 Setup.exe](https://drive.google.com/u/0/uc?id=1foRwr1LSONRXJuaXJVjumsVw9nF4hE1O&export=download)
+[Releases](https://github.com/Jociclelio/fastlogin/releases)

@@ -47,6 +47,7 @@ cmd /c start steam://open/main
 
 To Switch accounts with the FastLogin you must to:
 - Never logout in the steam app
+![Change account button](https://github.com/Jociclelio/fastlogin/blob/master/src/img/readme/ChangeAccount.png?raw=true)
 - Sign in to accounts at least once
 
 ## Download
@@ -101,6 +102,7 @@ cmd /c start steam://open/main
 
 Para trocar de contas usando o FastLogin voce tem que:
 - Nunca deslogar da steam 
+![Botão de trocar conta](https://github.com/Jociclelio/fastlogin/blob/master/src/img/readme/TrocarConta.png?raw=true)
 - Logar em cada conta pelo menos uma vez
 
 ## Baixar

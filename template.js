@@ -1,15 +1,15 @@
-const { Menu, nativeImage, ipcMain} = require('electron');
-const fs = require('fs');
-let { language } = require('./config.json');
-let lang = false;
-if(language != "english") try {lang = require(`./lang/${language}.json`)} catch{};
+const { Menu, nativeImage, ipcMain} = require('electron'); //things to do the templates and comunicate to main.js
+const fs = require('fs'); //to write and read  images and hashs
+let { language } = require('./config.json'); //lang in the config
+let lang = false; //lang equals false mean the language is english
+if(language != "english") try {lang = require(`./lang/${language}.json`)} catch{}; //try to load other language
 
 module.exports = {
     appMenu(usersDisk, steampath) {
         let menu = [];
         let removeSubmenu = [];
         let languageSubmenu = [];
-
+        //generate the content of remove submenu (before the load the menu item Accounts)
         usersDisk.map((user) => {
             let ico = new nativeImage.createFromPath(steampath + "/config/avatarcache/" + user[0] + ".png").resize({ with: 16, height: 16, quality: "good" });
             removeSubmenu.push({
@@ -20,6 +20,7 @@ module.exports = {
                 }
             });
         });
+        //push in first menu item (Accounts)
         menu.push({
             label: `${lang && lang.menu.acconnts.title ? lang.menu.acconnts.title : "Acconnts"}`,
             submenu: [{
@@ -29,10 +30,10 @@ module.exports = {
                 },
             }, {
                 label: `${lang && lang.menu.acconnts.removeAccount ? lang.menu.acconnts.removeAccount : "Remove account"}`,
-                submenu: removeSubmenu
+                submenu: removeSubmenu //apply remove submenu generated before
             }],
         })
-        
+        //load the content of language submenu (before the load the menu item)
         languageSubmenu.push({
             id:"english",
             label:"english",
@@ -44,6 +45,7 @@ module.exports = {
                 ipcMain.emit('change-language', null, "english");
             },
         });
+        //read the files inside the dir lang, to show in the submenu
         fs.readdirSync(__dirname+"/lang").forEach(languageFile => {
             if (!languageFile.endsWith(".json")) return;
             languageFile = languageFile.replace(".json", "");
@@ -53,13 +55,14 @@ module.exports = {
                 type: 'radio',
                 checked: language === languageFile,
                 click:() => {
+                    //change the template language (because the require only read once time)
                     language = languageFile;
-                    lang = require(`./lang/${language}.json`)
-                    ipcMain.emit('change-language', null, languageFile);
+                    lang = require(`./lang/${language}.json`) //read the new language
+                    ipcMain.emit('change-language', null, languageFile); //send to the main.js that the language changed (it will update the menus)
                 },
             });
           });
-
+        //push in first menu item (Options)
         menu.push({
             label: `${lang && lang.menu.options.title ? lang.menu.options.title : "Options"}`,
             submenu: [
@@ -92,10 +95,11 @@ module.exports = {
                 },
                 {
                     label:`${lang && lang.menu.options.language ? lang.menu.options.language : "Language"}`,
-                    submenu: languageSubmenu
+                    submenu: languageSubmenu // apply the language submenu generated before
                 }
             ]
         })
+        //push the Help menu item
         menu.push({
             label: `${lang && lang.menu.options.title ? lang.menu.help.title : "Help"}`,
             submenu:[
@@ -108,6 +112,7 @@ module.exports = {
             ]
         })
 
+        //return the generated menu
         return menu;
     },
     trayMenu(usersDisk, steampath) {

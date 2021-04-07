@@ -6,7 +6,7 @@ const jsonfile = require('jsonfile');
 const AutoLaunch = require('auto-launch');
 const config = require(`./config.json`);
  
-if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalação
+if (require('electron-squirrel-startup')) return app.quit();// Evita iniciar na instalaçã
 
 app.setAboutPanelOptions({iconPath: __dirname+"/src/img/appicon/FastLogin.ico"});
 const autoLaunch = new AutoLaunch({name: app.getName(), path: app.getPath('exe'),});
